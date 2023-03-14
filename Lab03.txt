@@ -1,4 +1,4 @@
-Employee.java
+EMPLOYEE.JAVA
 
 package Lab3;
 //Persistence Class
@@ -40,8 +40,8 @@ public void setAddress(String address) {
 
 
 
+MAINEXECUTE.JAVA
 
-MainExecute.java
 
 package Lab3;
 
@@ -71,25 +71,7 @@ public class MainExecute {
 		Transaction t = session.beginTransaction();
 	    Query query = session.createQuery("update employee set name = '"+name+"' where empid ='"+empid+"'");
 	    query.executeUpdate();
-//		Query q = session.createQuery("from employee");
-//		List<?> l = q.getResultList();
-//		Iterator<?> it = l.iterator();
-//		employee e1 = (employee) it.next();
-//		String Address;
-//		int Salary;
-//		//Saved the attributes that exist so that i can bypass the NULL assignment
-//		Salary=e1.getSalary();
-//		Address=e1.getAddress().toString();
-//		//Detached the object from the session else it creates error, 
-//		//since hibernate cannot push parallel transaction on same reference objects
-//		session.evict(e1);
-//		employee e2=new employee();
-//		//Setting the attributes that you want to update and rest with already backed up values from attribute
-//		e2.setEmpid(empid);
-//		e2.setName(name);
-//		e2.setAddress(Address);
-//		e2.setSalary(Salary);;
-//		session.saveOrUpdate(e2);
+
 		t.commit();
 	}
 	
@@ -164,7 +146,8 @@ public class MainExecute {
 	}
 }
 
-employee.hbm.xml
+
+EMPLOYEE.HBM.XML
 
 <?xml version="1.0" encoding="UTF-8"?>
 <hibernate-mapping>
@@ -176,7 +159,11 @@ employee.hbm.xml
 </class>
 </hibernate-mapping>
 
-hibernate.cfg.xml
+
+
+HIBERNATE.CNF.XML
+
+
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC
 		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
