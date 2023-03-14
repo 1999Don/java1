@@ -1,129 +1,134 @@
-Xml Code for the activity_main.xml
+package hibernate_proj;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
+import javax.persistence.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 
-<FrameLayout
- android:id="@+id/frameLayout"
- android:layout_width="411dp"
- android:layout_height="0dp"
- android:layout_marginStart="1dp"
- android:layout_marginEnd="1dp"
- android:layout_marginBottom="56dp"
- app:layout_constraintBottom_toTopOf="@+id/button"
- app:layout_constraintEnd_toEndOf="parent"
- app:layout_constraintHorizontal_bias="1.0"
- app:layout_constraintStart_toStartOf="parent"
- app:layout_constraintTop_toTopOf="parent"
- app:layout_constraintVertical_bias="0.0">
-</FrameLayout>
-<Button
- android:id="@+id/button"
- android:layout_width="wrap_content"
- android:layout_height="wrap_content"
- android:layout_marginBottom="22dp"
- android:text="FirstFargment"
- android:textSize="13dp"
- app:layout_constraintBottom_toBottomOf="parent"
- app:layout_constraintEnd_toEndOf="parent"
- app:layout_constraintHorizontal_bias="0.114"
- app:layout_constraintStart_toStartOf="parent"
- app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
-<Button
- android:id="@+id/button2"
- android:layout_width="wrap_content"
- android:layout_height="wrap_content"
- android:layout_marginEnd="10dp"
- android:layout_marginBottom="20dp"
- android:text="SecondFargment"
- android:textSize="13dp"
- app:layout_constraintBottom_toBottomOf="parent"
- app:layout_constraintEnd_toEndOf="parent"
- app:layout_constraintHorizontal_bias="0.89"
- app:layout_constraintStart_toEndOf="@+id/button" />
+public class myhibernate {
+	
+		SessionFactory sc1 = new Configuration().configure().buildSessionFactory();
+				
+		Session session = sc1.openSession();
+		
+		Transaction t1 = session.beginTransaction();
 
+		public void insert(int rl, String n1) {
+			student_table st1 = new student_table();
+			st1.setRollno(rl);
+			st1.setName(n1);
+			Session s=sc1.openSession();
+			Transaction t1= s.beginTransaction();
+			s.save(st1);
+			t1.commit();
+			 //Commit will make the database commit. 
+			//The changes to persistent object will be written to database
+						 			
+		}
 
+		public void delete(int n2) {
+	    	student_table st1 = new student_table();
+	    	
+	        st1.setRollno(n2);
+	        
+	        Session s=sc1.openSession();
+			Transaction t1= s.beginTransaction();
+			s.delete(st1);
+			t1.commit();
 
+//	        Query query=session.createQuery("delete from student_table where Rollno=111");  
+//	         query.executeUpdate();  
+		}
+		
+		public void update(int rr, String nn) {
+			
+	    	student_table st1 = new student_table();
+	    	
+	     	   st1.setRollno(rr);
+	            st1.setName(nn);
+	    //session.persist(st1); // Hibernate persist is similar to save (with transaction) 
+	    //and it adds the entity object to the persistent context, 
+	    //so any further changes are tracked. 
+	            Session s=sc1.openSession();
+				Transaction t1= s.beginTransaction();
+				s.saveOrUpdate(st1);
+				t1.commit();
+	                       
+	          //  session.update(st1); //if data exists in database
+	          //   session.save(st1);//if data not exists
+	                             
+   		            } 
+		 	   
+	            		
+		public  void display() {
+			Session s=sc1.openSession();
+			Transaction t1= s.beginTransaction();
+			Query q = s.createQuery("from student_table");
+			List l = q.getResultList();
+  //Execute a SELECT query and return the query results as an untyped List.
+			Iterator it = l.iterator();
+			System.out.println("List of students:");
+			while (it.hasNext()) {
+				student_table stud = (student_table) it.next();
+				System.out.println(stud.toString());
+				//System.out.println(it.next().toString());
+			}
+			t1.commit();
+		}
 
-Fragment one xml code
-<TextView
- android:id="@+id/textView2"
- android:layout_width="wrap_content"
- android:layout_height="wrap_content"
- android:text="FirstFragment"
- android:textSize="48dp"
- android:textColor="#FFFFFF"
- app:layout_constraintBottom_toBottomOf="parent"
- app:layout_constraintEnd_toEndOf="parent"
- app:layout_constraintStart_toStartOf="parent"
- app:layout_constraintTop_toTopOf="parent" />
-Note Please change the Background of Fragment 
-android:background="#83E111"
+		public static void main(String[] args)
+		{
+			myhibernate sm1 = new myhibernate();
+			Scanner sc11 = new Scanner(System.in); 
 
-
-
-
-Fragment Second xml code
-<TextView
- android:id="@+id/textView"
- android:layout_width="wrap_content"
- android:layout_height="wrap_content"
- android:text="SecondFragment"
- android:textSize="48dp"
- android:textColor="#FFFFFF"
- app:layout_constraintBottom_toBottomOf="parent"
- app:layout_constraintEnd_toEndOf="parent"
- app:layout_constraintStart_toStartOf="parent"
- app:layout_constraintTop_toTopOf="parent" />
-Note Please change the Background of Fragment 
-android:background="#AA7D7D"
-
-
-
-Java Code for Main Activity
-@Override
-protected void onCreate(Bundle savedInstanceState) {
- super.onCreate(savedInstanceState);
- setContentView(R.layout.activity_main);
- FirstFragment fragment1=new FirstFragment();
- secondFragment fragment2=new secondFragment();
- FragmentManager managerF = getSupportFragmentManager();
- // FragmentManager is the class responsible for performing actions
- // on your app's fragments,
- // such as adding, removing, or replacing them
- FragmentTransaction Ftransaction = managerF.beginTransaction();
- //a FragmentManager can add, remove, replace, and perform other actions 
-with fragments
- // in response to user interaction. Each set of fragment changes that 
-you
- // commit is called a transaction
- Ftransaction.add(R.id.frameLayout,fragment1);
- //add the Fragment
- Button b1 = findViewById(R.id.button);
- Button b2 = findViewById(R.id.button2);
- b1.setOnClickListener(new View.OnClickListener() {
- @Override
- public void onClick(View view) {
- FragmentManager managerF = getSupportFragmentManager();
- FragmentTransaction Ftransaction = managerF.beginTransaction();
- Ftransaction.replace(R.id.frameLayout,fragment1);
- //replace the Fragment
- Toast.makeText(MainActivity.this,"Changed to 
-Fragment1",Toast.LENGTH_LONG).show();
- Ftransaction.commit();
- //Commit the changes in the Activity Main.
- }
- });
- b2.setOnClickListener(new View.OnClickListener() {
- @Override
- public void onClick(View view) {
- FragmentManager managerF = getSupportFragmentManager();
- FragmentTransaction Ftransaction = managerF.beginTransaction();
- Ftransaction.replace(R.id.frameLayout,fragment2);
- Toast.makeText(MainActivity.this,"Changed to 
-Fragment1",Toast.LENGTH_LONG).show();
- Ftransaction.commit();
- }
- });
+			lp: while (true) 
+			{
+				System.out.println("1: Insert");
+				System.out.println("2: Display");
+				System.out.println("3: delete");
+				System.out.println("4: update");
+				System.out.println("5: exit");
+				System.out.print("Make your choice: ");
+				int ch = sc11.nextInt(); // reading user's choice
+				switch (ch) {
+				case 1: 
+					System.out.print("Enter the student Details to insert \n");
+					System.out.print("Enter the roll no \n");
+					int rl = sc11.nextInt();
+					System.out.print("Enter the student name \n");
+					String n1 = sc11.next();
+					sm1.insert(rl,n1);
+					break;			
+				case 2:
+					sm1.display();
+					break;
+				case 3:
+					System.out.print("Enter the roll no \n");
+					int n2 = sc11.nextInt();
+					sm1.delete(n2);
+					break;
+				case 4:
+					System.out.print("Enter the roll no \n");
+					int rr = sc11.nextInt();
+					System.out.print("Enter the student name \n");
+					String nn = sc11.next();
+					sm1.update(rr,nn);
+					break;
+				case 5:
+					break lp;
+		
+		        default:
+					System.out.println("Invalid choice! Please make a valid choice. \n\n");
+				}
+			}
+		}
 }
+
 
 
 
