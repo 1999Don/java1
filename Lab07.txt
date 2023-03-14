@@ -1,8 +1,92 @@
-APPCONFIG.JAVA
+APP.JAVA
 
-package Test;
+
+package com.lab7;
+import java.util.*;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class App {
+	
+	
+	public static void main(String[] args) {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(); 
+		context.scan("com.lab7");
+		context.refresh();
+		studentService stud_ser = (studentService) context.getBean("studentService");
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.println("----MENU----");
+		System.out.println("1. INSERT");
+		System.out.println("2. DISPLAY");
+		System.out.println("3. UPDATE");
+		System.out.println("4. DELETE");
+		System.out.println("5. EXIT");
+		
+		while(true)
+		{
+			System.out.print("Enter your choice : ");
+			int ch = sc.nextInt();
+			
+			if(ch==1)
+			{
+				
+				
+				System.out.print("Enter the ID : ");
+				int id = sc.nextInt();
+				System.out.print("Enter the Name : ");
+				String name = sc.next();
+				
+				stud_ser.Save(id,name);
+			
+			}
+			else if(ch==2)
+			{
+				
+				
+				List<student> allStud = stud_ser.getStudList();
+				for(student s : allStud)
+				{
+					System.out.println("ID : " + s.getId());
+					System.out.println("Name : " + s.getName());
+					
+				}
+			}
+			else if(ch==3)
+			{
+				
+				
+				System.out.print("Enter the ID : ");
+				int id = sc.nextInt();
+				System.out.print("Enter the Name : ");
+				String name = sc.next();
+				
+				stud_ser.update(id,name);
+			}
+			else if(ch==4)
+			{
+			
+				System.out.print("Enter the ID : ");
+				int id = sc.nextInt();
+				stud_ser.delete(id);
+			}
+			else if(ch==5)
+				break;
+			else
+				System.out.println("Invalid Choice");
+		}
+	}
+
+}
+
+
+CONFIG.JAVA
+
+package com.lab7;
 
 import javax.persistence.EntityManagerFactory;
+
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -10,207 +94,153 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
 
 @Configuration
-@EnableJpaRepositories(basePackages = { "com.durgesh" })
-public class AppConfig {
+@EnableJpaRepositories(basePackages = {"com.lab7"})
+public class config {
+	@Bean
+	public LocalEntityManagerFactoryBean entityManagerFactory()
+	{
+		LocalEntityManagerFactoryBean factorybean = new LocalEntityManagerFactoryBean();
+		factorybean.setPersistenceUnitName("lab7_student");
+		return factorybean;
+	}
 	
 	@Bean
-	public LocalEntityManagerFactoryBean entityManagerFactory() {
-		LocalEntityManagerFactoryBean factoryBean = new LocalEntityManagerFactoryBean();
-		factoryBean.setPersistenceUnitName("SpringJPAPer");
-
-		return factoryBean;
-	}
-
-	@Bean
-	public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-		JpaTransactionManager transactionManager = new JpaTransactionManager();
+	public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory)
+	{
+		JpaTransactionManager transactionManager = new JpaTransactionManager();		
 		transactionManager.setEntityManagerFactory(entityManagerFactory);
-
 		return transactionManager;
 	}
 }
 
 
+STUDENT.JAVA
+
+package com.lab7;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+public class student {
+	@Id
+	int id;
+	String name;
+	
+	public student() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+	public student(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+}
+
+STUDENTREPOSITORY.JAVA
+
+package com.lab7;
+
+import javax.transaction.Transactional;
+
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@Transactional
+public interface studentRepository extends PagingAndSortingRepository<student,Integer>{
+
+}
 
 
-MESSAGESERVICE.JAVA
 
-package Test;
+STUDENTSERVICE.JAVA
+
+
+package com.lab7;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-
-@Service("MessageService")
-public class MessageService {
+@Service("studentService")
+public class studentService {
 
 	@Autowired
-	MessageRepository ar;
-
-	public void Save(int mid, String message) {
-		Message m = new Message();
-		m.setMid(mid);
-		m.setMessage(message);
-		ar.save(m);
-	
-	}
-	public void Delete(int mid) {
-		Message m = new Message();
-		m.setMid(mid);
-		
-		ar.delete(m);
-	
-	}
-	public void Update(int mid, String message) {
-		Message m = new Message();
-		m.setMid(mid);
-		m.setMessage(message);
-		ar.save(m);
-	
+	studentRepository repo;
+	public void Save(int id, String name)
+	{
+		student s = new student();
+		s.setId(id);
+		s.setName(name);
+		repo.save(s);
 	}
 	
-
-	public List<Message> getMessages() {
-		List<Message> al = (List<Message>) ar.findAll();
-		
-		
-		return al;
+	public void update(int id, String name)
+	{
+		student s = new student();
+		s.setId(id);
+		s.setName(name);
+		repo.save(s);
+	}
+	
+	public void delete(int id)
+	{
+		student s = new student();
+		s.setId(id);
+		repo.delete(s);
+	}
+	
+	public List<student> getStudList()
+	{
+		List<student> allStud = (List<student>) repo.findAll();
+		return allStud;
 	}
 }
 
 
 
+PERSISTANCE.JAVA
 
-MESSAGE.JAVA
-
-package Test;
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
-
-@Service("MessageService")
-public class MessageService {
-
-	@Autowired
-	MessageRepository ar;
-
-	public void Save(int mid, String message) {
-		Message m = new Message();
-		m.setMid(mid);
-		m.setMessage(message);
-		ar.save(m);
-	
-	}
-	public void Delete(int mid) {
-		Message m = new Message();
-		m.setMid(mid);
-		
-		ar.delete(m);
-	
-	}
-	public void Update(int mid, String message) {
-		Message m = new Message();
-		m.setMid(mid);
-		m.setMessage(message);
-		ar.save(m);
-	
-	}
-	
-
-	public List<Message> getMessages() {
-		List<Message> al = (List<Message>) ar.findAll();
-		
-		
-		return al;
-	}
-}
-
-
-
-
-
-MESSAGE_MAIN.JAVA
-
-package Test;
-import java.util.List;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-public class Message_Main {
-
-	public static void main(String[] args) {
-		AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext();
-		appContext.scan("com.durgesh");
-		appContext.refresh();
-		MessageService messageService = (MessageService) appContext.getBean("MessageService");
-		messageService.Save(10, "Durgesh");
-		messageService.Save(21, "Ayush");
-		List<Message> al = messageService.getMessages();
-		for (Message m : al) {
-			System.out.println(m.getMid() + " " + m.getMessage());
-		}
-		appContext.close();
-	}
-}
-
-
-
-
-
-MESSAGEREPOSITORY.JAVA
-
-package Test;
-import java.util.List;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-public class Message_Main {
-
-	public static void main(String[] args) {
-		AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext();
-		appContext.scan("com.durgesh");
-		appContext.refresh();
-		MessageService messageService = (MessageService) appContext.getBean("MessageService");
-		messageService.Save(10, "Durgesh");
-		messageService.Save(21, "Ayush");
-		List<Message> al = messageService.getMessages();
-		for (Message m : al) {
-			System.out.println(m.getMid() + " " + m.getMessage());
-		}
-		appContext.close();
-	}
-}
-
-
-PERSISTENT.XML
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.2"
 	xmlns="http://xmlns.jcp.org/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence 
 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
-	<persistence-unit name="SpringJPAPer"
+	<persistence-unit name="lab7_student"
 		transaction-type="RESOURCE_LOCAL">
-		<class>com.durgesh.Message</class>
+		<class>com.lab7.student</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://localhost:3306/java1" />
+				value="jdbc:mysql://localhost:3306/uni" />
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<property name="javax.persistence.jdbc.password"
-				value="root" />
+				value="4560" />
 			<property name="javax.persistence.jdbc.driver"
 				value="com.mysql.cj.jdbc.Driver" />
 		</properties>
 	</persistence-unit>
 </persistence>
-
-
-
 
