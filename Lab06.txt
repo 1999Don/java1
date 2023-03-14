@@ -1,0 +1,156 @@
+javaconfig.java
+package Lab6;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+
+@Configuration
+public class Config {
+	
+	@Bean
+	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public classOne setBeanOne() {
+		return new classOne();
+	}
+
+	@Bean
+	@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	public classTwo setBeanTwo() {
+		return new classTwo();
+	}
+}
+
+
+
+classone.java
+package Lab6;
+
+import java.io.Serializable;
+
+public class classOne implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	private String name;
+	private int age;
+	private classTwo c2;
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public int getAge() {
+		return age;
+	}
+	
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	public classTwo getC2() {
+		return c2;
+	}
+	
+	public void setC2(classTwo c2) {
+		this.c2 = c2;
+	}
+	
+	@Override
+	public String toString() {
+			return "Name : \t"+name+
+					"\nAge : \t"+age+
+					c2;
+	}
+}
+
+
+
+
+classtwo.java
+package Lab6;
+
+import java.io.Serializable;
+
+public class classTwo implements Serializable{
+	
+	private String course,college;
+
+	
+	private static final long serialVersionUID = 1L;
+	public String getCourse() {
+		return course;
+	}
+	public void setCourse(String course) {
+		this.course = course;
+	}
+	public String getCollege() {
+		return college;
+	}
+	public void setCollege(String college) {
+		this.college = college;
+	}
+	
+	@Override
+	public String toString() {
+			return "\nCourse : \t"+course+
+					"\nCollege : \t"+college;
+	}
+}
+
+
+
+main.java
+package Lab6;
+
+import java.util.Scanner;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class mainExecute {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		ApplicationContext context1=new AnnotationConfigApplicationContext(Config.class);
+		ApplicationContext context2=new AnnotationConfigApplicationContext(Config.class);
+
+		classOne one=(classOne)context1.getBean(classOne.class);
+		classTwo two=(classTwo)context2.getBean(classTwo.class);
+
+		String name,course,college;
+		int age,ch;
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Welcome Student");
+		while(true) {
+			System.out.println("\n1)Start\t\t2)Exit");
+			ch=sc.nextInt();
+			if(ch==1) {
+					System.out.println("Enter Name :");
+					name=sc.next();
+					System.out.println("Enter Age :");
+					age=sc.nextInt();
+					System.out.println("Enter Course :");
+					course=sc.next();
+					System.out.println("Enter College :");
+					college=sc.next();
+					one.setName(name);
+					one.setAge(age);
+					two.setCourse(course);
+					two.setCollege(college);
+					one.setC2(two);
+					System.out.println(one);
+				}
+			else if(ch==2) {
+					break;
+				}
+		}
+		System.out.println("------------Thank You------------");
+		}
+	}

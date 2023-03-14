@@ -1,0 +1,139 @@
+Java Spring LAb5
+
+-----------------------bean.xml(file)---------------------------------
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+      
+      <bean id="stud" class="Lab5.student">
+      	
+		<property name="c2" ref="clg"/>
+      </bean>
+      
+      <bean id="clg" class="Lab5.college" >
+
+      </bean>
+      
+</beans>
+
+------------------------------college class------------------------------
+package Lab5;
+import java.io.Serializable;
+public class college implements Serializable{	
+	private String course,college;	
+	private static final long serialVersionUID = 1L;
+	public String getCourse() {
+		return course;
+	}
+	public void setCourse(String course) {
+		this.course = course;
+	}
+	public String getCollege() {
+		return college;
+	}
+	public void setCollege(String college) {
+		this.college = college;
+	}	
+	@Override
+	public String toString() {
+			return "\nCourse:\t"+course+
+					"\nCollege:\t"+college;
+	}
+}
+
+
+-------------------------student class-------------------------------
+package Lab5;
+
+import java.io.Serializable;
+
+public class student implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	private String name;
+	private int age;
+	private college c2;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public college getC2() {
+		return c2;
+	}
+
+	public void setC2(college c2) {
+		this.c2 = c2;
+	}
+
+	@Override
+	public String toString() {
+		return "Name:\t" + name + "\nAge:\t" + age + c2;
+	}
+}
+
+
+----------------------------------main class-------------------------
+package Lab5;
+
+import java.util.Scanner;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class mainExecute {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ApplicationContext context1= new ClassPathXmlApplicationContext("bean.xml");
+		ApplicationContext context2= new ClassPathXmlApplicationContext("bean.xml");
+
+		student s1=(student)context1.getBean("stud");
+		college c1=(college)context2.getBean("clg");
+
+		String name,course,college;
+		int age,ch;
+		Scanner sc=new Scanner(System.in).useDelimiter("\n");
+		System.out.println("---------------------Welcome Student------------------------------");
+		
+		while(true) {
+			System.out.println("\n0.Exit \n1.Add \n2.display");
+			ch=sc.nextInt();
+			if(ch==1) {
+					System.out.println("Enter Name :");
+					name=sc.next();
+					System.out.println("Enter Age :");
+					age=sc.nextInt();
+					System.out.println("Enter Course :");
+					course=sc.next();
+					System.out.println("Enter College :");
+					college=sc.next();
+					s1.setName(name);
+					s1.setAge(age);
+					c1.setCourse(course);
+					c1.setCollege(college);
+					s1.setC2(c1);
+//					System.out.println(s1);
+				}
+			else if(ch==2) {
+				System.out.println(s1);
+			}
+			else if(ch==0) {
+					break;
+				}
+		}
+		}
+	}

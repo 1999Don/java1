@@ -1,0 +1,216 @@
+APPCONFIG.JAVA
+
+package Test;
+
+import javax.persistence.EntityManagerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
+
+@Configuration
+@EnableJpaRepositories(basePackages = { "com.durgesh" })
+public class AppConfig {
+	
+	@Bean
+	public LocalEntityManagerFactoryBean entityManagerFactory() {
+		LocalEntityManagerFactoryBean factoryBean = new LocalEntityManagerFactoryBean();
+		factoryBean.setPersistenceUnitName("SpringJPAPer");
+
+		return factoryBean;
+	}
+
+	@Bean
+	public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+		JpaTransactionManager transactionManager = new JpaTransactionManager();
+		transactionManager.setEntityManagerFactory(entityManagerFactory);
+
+		return transactionManager;
+	}
+}
+
+
+
+
+MESSAGESERVICE.JAVA
+
+package Test;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+
+@Service("MessageService")
+public class MessageService {
+
+	@Autowired
+	MessageRepository ar;
+
+	public void Save(int mid, String message) {
+		Message m = new Message();
+		m.setMid(mid);
+		m.setMessage(message);
+		ar.save(m);
+	
+	}
+	public void Delete(int mid) {
+		Message m = new Message();
+		m.setMid(mid);
+		
+		ar.delete(m);
+	
+	}
+	public void Update(int mid, String message) {
+		Message m = new Message();
+		m.setMid(mid);
+		m.setMessage(message);
+		ar.save(m);
+	
+	}
+	
+
+	public List<Message> getMessages() {
+		List<Message> al = (List<Message>) ar.findAll();
+		
+		
+		return al;
+	}
+}
+
+
+
+
+MESSAGE.JAVA
+
+package Test;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+
+@Service("MessageService")
+public class MessageService {
+
+	@Autowired
+	MessageRepository ar;
+
+	public void Save(int mid, String message) {
+		Message m = new Message();
+		m.setMid(mid);
+		m.setMessage(message);
+		ar.save(m);
+	
+	}
+	public void Delete(int mid) {
+		Message m = new Message();
+		m.setMid(mid);
+		
+		ar.delete(m);
+	
+	}
+	public void Update(int mid, String message) {
+		Message m = new Message();
+		m.setMid(mid);
+		m.setMessage(message);
+		ar.save(m);
+	
+	}
+	
+
+	public List<Message> getMessages() {
+		List<Message> al = (List<Message>) ar.findAll();
+		
+		
+		return al;
+	}
+}
+
+
+
+
+
+MESSAGE_MAIN.JAVA
+
+package Test;
+import java.util.List;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class Message_Main {
+
+	public static void main(String[] args) {
+		AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext();
+		appContext.scan("com.durgesh");
+		appContext.refresh();
+		MessageService messageService = (MessageService) appContext.getBean("MessageService");
+		messageService.Save(10, "Durgesh");
+		messageService.Save(21, "Ayush");
+		List<Message> al = messageService.getMessages();
+		for (Message m : al) {
+			System.out.println(m.getMid() + " " + m.getMessage());
+		}
+		appContext.close();
+	}
+}
+
+
+
+
+
+MESSAGEREPOSITORY.JAVA
+
+package Test;
+import java.util.List;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class Message_Main {
+
+	public static void main(String[] args) {
+		AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext();
+		appContext.scan("com.durgesh");
+		appContext.refresh();
+		MessageService messageService = (MessageService) appContext.getBean("MessageService");
+		messageService.Save(10, "Durgesh");
+		messageService.Save(21, "Ayush");
+		List<Message> al = messageService.getMessages();
+		for (Message m : al) {
+			System.out.println(m.getMid() + " " + m.getMessage());
+		}
+		appContext.close();
+	}
+}
+
+
+PERSISTENT.XML
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence 
+http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+	<persistence-unit name="SpringJPAPer"
+		transaction-type="RESOURCE_LOCAL">
+		<class>com.durgesh.Message</class>
+		<properties>
+			<property name="javax.persistence.jdbc.url"
+				value="jdbc:mysql://localhost:3306/java1" />
+			<property name="javax.persistence.jdbc.user" value="root" />
+			<property name="javax.persistence.jdbc.password"
+				value="root" />
+			<property name="javax.persistence.jdbc.driver"
+				value="com.mysql.cj.jdbc.Driver" />
+		</properties>
+	</persistence-unit>
+</persistence>
+
+
+
+

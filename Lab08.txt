@@ -1,0 +1,117 @@
+ MainController.java
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+public class MainController {
+
+	@RequestMapping("/")
+	public String index() {
+		return "index";
+	}
+	
+	@RequestMapping("/page2")
+	public String page2(@RequestParam String sname , @RequestParam String scourse , Model model) {
+		System.out.println("customer name = "+sname);
+		model.addAttribute("sname", sname);
+		model.addAttribute("scourse",scourse);
+		return "page2";
+	}
+}
+
+Student.java
+
+package com.durgesh;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+package com.durgesh;
+
+public class Student {
+
+}
+
+Index.jsp
+ <!doctype html>
+<html>
+<head>
+<title>Index</title>
+</head>
+<body>
+	<form action="page2" method="get">
+		<label>Student Name:</label>
+		<input type="text" name="sname"><br>
+		<label>Student Course</label>
+		<input type="text" name="scourse"><br>
+		<button type="submit">Submit</button>
+	</form>
+	
+	
+</body>
+</html>
+
+
+Page2.jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Home Page</title>
+</head>
+<body>
+	<center>
+		<h3>Home Page</h3>
+		<h5>Student Details</h5>
+		Student Name = ${sname} <br>
+		Student Course = ${scourse}
+
+	</center>
+</body>
+</html>
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>SpringMVC</display-name>
+  <servlet>
+    <servlet-name>spring</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>spring</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+</web-app>
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="  
+        http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://www.springframework.org/schema/context  
+        http://www.springframework.org/schema/context/spring-context.xsd  
+        http://www.springframework.org/schema/mvc  
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- Provide support for component scanning -->
+	<context:component-scan base-package="com.durgesh" />
+
+	<!--Provide support for conversion, formatting and validation -->
+	<mvc:annotation-driven />
+	<!-- Define Spring MVC view resolver -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value=""></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+</beans>

@@ -1,0 +1,61 @@
+Client1.java
+
+package LAB4;
+
+import java.io.*;
+
+import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.elements.exception.ConnectorException;
+
+public class Client1 {
+
+	public static void main(String[] args) {
+		CoapClient client1=new CoapClient("coap://localhost/Humidity");
+		try {
+			for(int i=0;i<10;i++) {
+				String text=client1.get().getResponseText();
+				System.out.println(text);
+			}
+		}catch(ConnectorException e2) {
+				e2.printStackTrace();
+			}
+			catch(IOException e2) {
+				e2.printStackTrace();
+			}//Blocking Call
+			System.out.println("Client Ended");
+		}
+	}
+
+
+Resoure.java
+
+package LAB4;
+
+import org.eclipse.californium.core.CoapResource;
+import org.eclipse.californium.core.CoapServer;
+import org.eclipse.californium.core.server.resources.CoapExchange;
+
+public class Resource1 extends CoapResource{
+	public Resource1(String name) {
+		super(name);
+	}
+	
+	@Override
+	public void handleGET(CoapExchange exchange) {
+		String text="Humidy : "+Math.floor((Math.random()*(45-20)+20));
+		//System.out.println("Host Requesting : "+exchange.getSourceAddress()+" "+text);
+		
+		exchange.respond(text);
+		try {
+			Thread.sleep(1000);
+		}catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void main(String[] args) {
+		CoapServer server=new CoapServer();
+		server.add(new Resource1("Humidity"));
+		server.start();
+	}
+}
+
