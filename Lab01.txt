@@ -1,78 +1,190 @@
-package prac1;
-import java.util.*;
-public class hashmap1 {
+HASHMAP.JAVA
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		String state,capital;
-		Scanner sc=new Scanner(System.in);
-		Map<String,String> cmap= new HashMap<>();
-		while(true) {
-			System.out.println("1.Create \n2.Display \n3.Search \n4.Remove \n5.update \n6.Sort \n7Size \n8.Clear \nEnter u r choice ");
-			int ch=sc.nextInt();
-			if(ch==1) {
-				System.out.println("enter State");
-				state=sc.next();
-				System.out.println("enter Capital");
-				capital = sc.next();
-				cmap.put(state, capital);
-				
-			}
-			else if(ch==2) {
-				for(Map.Entry<String, String> e:cmap.entrySet())
-				{
-					System.out.println(e.getKey()+" "+e.getValue());
-				}
-				System.out.println("========================Other method=======================================");
-				Iterator <String> it=cmap.keySet().iterator();
-				while(it.hasNext()) {
-					String key=(String)it.next();
-					System.out.println("State "+key+"\tCapital "+cmap.get(key));
-				}
-			}
-			else if(ch==3) {
-				System.out.println("enter State name to get capital");
-				state=sc.next();
-				if(cmap.containsKey(state)) {
-					System.out.println("State = "+state+"\tCapital = "+cmap.get(state)+"");
-				}
-				else {
-					System.out.println("State not present");
-				}
-			}
-			else if(ch==4) {
-				System.out.println("enter State to remove");
-				state = sc.next();
-				cmap.remove(state);
-			}
-			else if(ch==5) {
-				System.out.println("Enter the State name to change Capital");
-				state=sc.next();
-				System.out.println("Enter the Capital name");
-				capital = sc.next();
-						
-				cmap.replace(state, capital);
-			}
-			else if(ch==6) {
-				TreeMap<String, String> sorted = new TreeMap<>();
-				
-				sorted.putAll(cmap);
-				
-				for (Map.Entry<String, String> entry : sorted.entrySet()) {
-					System.out.println("Key = " + entry.getKey() +"Value = " + entry.getValue());
-				}
-			}
-			else if(ch==7) {
-				System.out.println(cmap.size());
-			}
-			else if(ch==8) {
-				cmap.clear();
-				System.out.println("Hash Map is cleared");
-				System.out.println(cmap.size());
+
+import java.util.*;
+
+public class hashmap {
+
+public static void main(String[] args) {
+
+	Scanner sc = new Scanner(System.in);
+	System.out.println("----MENU----");
+	System.out.println("1. Add");
+	System.out.println("2. Display using entrySet");
+	System.out.println("3. Display using keySet");
+	System.out.println("4. Search");
+	System.out.println("5. Delete");
+	System.out.println("6. Update");
+	System.out.println("7. Sort");
+	System.out.println("8. clear");
+	System.out.println("9. size");
+	System.out.println("10. Exit");
+
+	String usn,name;
+	Map<String,String> hmap = new HashMap<>();
+	while(true)
+	{
+		System.out.print("Enter your choice : ");
+		int ch = sc.nextInt();
+		
+		if(ch==1)
+		{
+			System.out.print("Enter USN : ");
+			usn = sc.next();
+			System.out.print("Enter Name : ");
+			name = sc.next();
+			hmap.put(usn, name);
+		}
+		else if(ch==2)
+		{
+			for(Map.Entry<String,String> n:hmap.entrySet())
+			{
+				System.out.print("USN : " + n.getKey());
+				System.out.println(" Name : " + n.getValue());
 			}
 		}
+		else if(ch==3)
+		{
+			System.out.println("KEYS : " + hmap.keySet());
+		}
+		else if(ch==4)
+		{
+			System.out.print("Enter the key you want to search : ");
+			String key = sc.next();
+			if(hmap.containsKey(key))
+				System.out.println("Name : "+ hmap.get(key));
+			else
+				System.out.println("Key not found");
+		}
+		else if(ch==5)
+		{
+			System.out.print("Enter USN to delete : ");
+			usn = sc.next();
+			hmap.remove(usn);
+		}
+		else if(ch==6)
+		{
+			System.out.print("Enter USN to update : ");
+			usn = sc.next();
+			
+			System.out.print("Enter Name to update : ");
+			name = sc.next();
+			
+			hmap.replace(usn,name);
 		
-		//create,display,search,remove,update,sort,size,clear
+		}
+		else if(ch==7)
+		{
+			Map<String,String> tmap = new TreeMap<>();
+			tmap.putAll(hmap);
+			System.out.println(tmap);
+		}
+		else if(ch==8)
+		{
+			hmap.clear();
+			System.out.println(hmap);
+		}
+		else if(ch==9)
+		{
+			System.out.println("Size : " + hmap.size());
+		}
+		else if(ch==10)
+		{
+			break;
+		}
+		else
+			System.out.println("Invalid choice");
+	
 	}
+	sc.close();
+}
+}
+
+
+TREEMAP.JAVA
+
+import java.util.*;
+
+public class treemap {
+
+public static void main(String[] args) {
+
+	Scanner sc = new Scanner(System.in);
+	
+	System.out.println("----MENU----");
+	System.out.println("1. Add");
+	System.out.println("2. Get");
+	System.out.println("3. Display using keySet");
+	System.out.println("4. put if absent");
+	System.out.println("5. pollFirstEntry");
+	System.out.println("6. pollLastEntry");
+	System.out.println("7. Delete");
+	System.out.println("8. clear");
+	System.out.println("9. Exit");
+	
+	String usn,name;
+	Map<String,String> tmap = new TreeMap<>();
+	
+	while(true)
+	{
+		System.out.print("Enter your choice : ");
+		int ch = sc.nextInt();
+		
+		if(ch==1)
+		{
+			System.out.print("Enter USN : ");
+			usn = sc.next();
+			System.out.print("Enter Name : ");
+			name = sc.next();
+			tmap.put(usn, name);
+		}
+		else if(ch==2)
+		{
+			System.out.print("Enter USN to display name : ");
+			usn = sc.next();
+			System.out.println("Name : " + tmap.get(usn));
+		}
+		else if(ch==3)
+		{
+			System.out.println("KEYS : " + tmap.keySet());
+		}
+		else if(ch==4)
+		{
+			System.out.print("Enter USN : ");
+			usn = sc.next();
+			System.out.print("Enter Name : ");
+			name = sc.next();
+			tmap.putIfAbsent(usn, name);
+		}
+		else if(ch==5)
+		{
+			System.out.println(((TreeMap<String, String>) tmap).pollFirstEntry());
+		}
+		else if(ch==6)
+		{
+			System.out.println(((TreeMap<String, String>) tmap).pollLastEntry());
+		}
+		else if(ch==7)
+		{
+			System.out.print("Enter USN to delete : ");
+			usn = sc.next();
+			tmap.remove(usn);
+		}
+		else if(ch==8)
+		{
+			tmap.clear();
+			System.out.println(tmap);
+		}
+		else if(ch==9)
+		{
+			break;
+		}
+		else
+			System.out.println("Invalid choice");
+	
+	}
+	sc.close();
+}
 
 }
+
