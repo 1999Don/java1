@@ -1,140 +1,171 @@
-package hibernate_proj;
+Employee.java
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
-import javax.persistence.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+package Lab3;
+//Persistence Class
+import javax.persistence.*;
+@Entity
+@Table(name="employee")
 
-public class myhibernate {
+public class employee {
+	@Id
+	int empid;
+	int salary;
+	String name,address;
 	
-		SessionFactory sc1 = new Configuration().configure().buildSessionFactory();
-				
-		Session session = sc1.openSession();
-		
-		Transaction t1 = session.beginTransaction();
-
-		public void insert(int rl, String n1) {
-			student_table st1 = new student_table();
-			st1.setRollno(rl);
-			st1.setName(n1);
-			Session s=sc1.openSession();
-			Transaction t1= s.beginTransaction();
-			s.save(st1);
-			t1.commit();
-			 //Commit will make the database commit. 
-			//The changes to persistent object will be written to database
-						 			
-		}
-
-		public void delete(int n2) {
-	    	student_table st1 = new student_table();
-	    	
-	        st1.setRollno(n2);
-	        
-	        Session s=sc1.openSession();
-			Transaction t1= s.beginTransaction();
-			s.delete(st1);
-			t1.commit();
-
-//	        Query query=session.createQuery("delete from student_table where Rollno=111");  
-//	         query.executeUpdate();  
-		}
-		
-		public void update(int rr, String nn) {
-			
-	    	student_table st1 = new student_table();
-	    	
-	     	   st1.setRollno(rr);
-	            st1.setName(nn);
-	    //session.persist(st1); // Hibernate persist is similar to save (with transaction) 
-	    //and it adds the entity object to the persistent context, 
-	    //so any further changes are tracked. 
-	            Session s=sc1.openSession();
-				Transaction t1= s.beginTransaction();
-				s.saveOrUpdate(st1);
-				t1.commit();
-	                       
-	          //  session.update(st1); //if data exists in database
-	          //   session.save(st1);//if data not exists
-	                             
-   		            } 
-		 	   
-	            		
-		public  void display() {
-			Session s=sc1.openSession();
-			Transaction t1= s.beginTransaction();
-			Query q = s.createQuery("from student_table");
-			List l = q.getResultList();
-  //Execute a SELECT query and return the query results as an untyped List.
-			Iterator it = l.iterator();
-			System.out.println("List of students:");
-			while (it.hasNext()) {
-				student_table stud = (student_table) it.next();
-				System.out.println(stud.toString());
-				//System.out.println(it.next().toString());
-			}
-			t1.commit();
-		}
-
-		public static void main(String[] args)
-		{
-			myhibernate sm1 = new myhibernate();
-			Scanner sc11 = new Scanner(System.in); 
-
-			lp: while (true) 
-			{
-				System.out.println("1: Insert");
-				System.out.println("2: Display");
-				System.out.println("3: delete");
-				System.out.println("4: update");
-				System.out.println("5: exit");
-				System.out.print("Make your choice: ");
-				int ch = sc11.nextInt(); // reading user's choice
-				switch (ch) {
-				case 1: 
-					System.out.print("Enter the student Details to insert \n");
-					System.out.print("Enter the roll no \n");
-					int rl = sc11.nextInt();
-					System.out.print("Enter the student name \n");
-					String n1 = sc11.next();
-					sm1.insert(rl,n1);
-					break;			
-				case 2:
-					sm1.display();
-					break;
-				case 3:
-					System.out.print("Enter the roll no \n");
-					int n2 = sc11.nextInt();
-					sm1.delete(n2);
-					break;
-				case 4:
-					System.out.print("Enter the roll no \n");
-					int rr = sc11.nextInt();
-					System.out.print("Enter the student name \n");
-					String nn = sc11.next();
-					sm1.update(rr,nn);
-					break;
-				case 5:
-					break lp;
-		
-		        default:
-					System.out.println("Invalid choice! Please make a valid choice. \n\n");
-				}
-			}
-		}
+public String getName() {
+	return name;
+	}
+public void setName(String name) {
+	this.name = name;
+	}
+public int getSalary() {
+	return salary;
+	}
+public void setSalary(int salary) {
+	this.salary = salary;
+	}
+public int getEmpid() {
+	return empid;
+	}
+public void setEmpid(int empid) {
+	this.empid = empid;
+	}
+public String getAddress() {
+	return address;
+}
+public void setAddress(String address) {
+	this.address = address;
+}
 }
 
 
 
 
+MainExecute.java
 
+package Lab3;
+
+import java.util.*;
+import org.hibernate.*;
+import org.hibernate.cfg.*;
+public class MainExecute {
+
+	SessionFactory sc = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+
+	
+	public void insert(int empid,String name,int salary,String address) {
+		Session session = sc.openSession();
+		Transaction t = session.beginTransaction();
+		employee e1=new employee();
+		e1.setEmpid(empid);
+		e1.setName(name);
+		e1.setSalary(salary);
+		e1.setAddress(address);
+		session.save(e1);
+		t.commit();
+		System.out.print("Entered Succesfully");
+		}
+
+	public void update(int empid,String name) {
+		Session session = sc.openSession();
+		Transaction t = session.beginTransaction();
+	    Query query = session.createQuery("update employee set name = '"+name+"' where empid ='"+empid+"'");
+	    query.executeUpdate();
+//		Query q = session.createQuery("from employee");
+//		List<?> l = q.getResultList();
+//		Iterator<?> it = l.iterator();
+//		employee e1 = (employee) it.next();
+//		String Address;
+//		int Salary;
+//		//Saved the attributes that exist so that i can bypass the NULL assignment
+//		Salary=e1.getSalary();
+//		Address=e1.getAddress().toString();
+//		//Detached the object from the session else it creates error, 
+//		//since hibernate cannot push parallel transaction on same reference objects
+//		session.evict(e1);
+//		employee e2=new employee();
+//		//Setting the attributes that you want to update and rest with already backed up values from attribute
+//		e2.setEmpid(empid);
+//		e2.setName(name);
+//		e2.setAddress(Address);
+//		e2.setSalary(Salary);;
+//		session.saveOrUpdate(e2);
+		t.commit();
+	}
+	
+	public void delete(int empid) {
+		Session session = sc.openSession();
+		Transaction t = session.beginTransaction();
+		employee e1=new employee();
+		e1.setEmpid(empid);
+		session.delete(e1);
+		t.commit();
+	}
+	
+	public void display() {
+		Session session = sc.openSession();
+		Transaction t = session.beginTransaction();
+		Query q = session.createQuery("from employee");
+		List<?> l = q.getResultList();
+		Iterator<?> it = l.iterator();
+		if(!it.hasNext()) {
+			System.out.println("\n\nNo Employees!!!\n");
+
+		}
+		while (it.hasNext()) {
+			employee e1 = (employee) it.next();
+			System.out.println("\nEmp ID :"+e1.getEmpid()+
+					"\t\tName :"+e1.getName()+
+					"\nSalary :"+e1.getSalary()+
+					"\t\tAddress :"+e1.getAddress());
+		}
+		t.commit();
+		}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		MainExecute m1=new MainExecute();
+		Scanner sc=new Scanner(System.in);
+		int empid,salary,ch=0;
+		String name,address;
+		while(true) {
+		System.out.println("\n\n1.Insert\t2.Update\n3.Delete\t4.Display\nPress 0 to exit\n");
+		ch=sc.nextInt();		
+			if(ch==1) {
+				System.out.println("Emp ID :");
+				empid=sc.nextInt();
+				System.out.println("Name :");
+				name=sc.next();
+				System.out.println("Salary :");
+				salary=sc.nextInt();
+				System.out.println("Address :");
+				address=sc.next();
+				m1.insert(empid, name, salary, address);
+			}else
+			if(ch==2) {
+				System.out.println("Emp ID :");
+				empid=sc.nextInt();
+				System.out.println("Name :");
+				name=sc.next();
+				m1.update(empid, name);
+			}else
+			if(ch==3) {
+				System.out.println("Emp ID :");
+				empid=sc.nextInt();
+				m1.delete(empid);
+			}else
+			if(ch==4) {
+				m1.display();
+			}else
+			if(ch==0) {
+				break;
+			}
+		}
+	}
+}
 
 employee.hbm.xml
+
 <?xml version="1.0" encoding="UTF-8"?>
 <hibernate-mapping>
 <class name="Lab3.employee" table="employee">
@@ -144,3 +175,20 @@ employee.hbm.xml
 <property name="address" type="string" column="address" />
 </class>
 </hibernate-mapping>
+
+hibernate.cfg.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password">4560</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/ho</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <mapping class="Lab3.employee"/>
+        <mapping resource="employee.hbm.xml"/>
+    </session-factory>
+</hibernate-configuration>
