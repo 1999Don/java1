@@ -91,3 +91,50 @@ PAGE2.JSP
 	</div>
 </body>
 </html>
+
+
+
+web.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>SpringMVC</display-name>
+  <servlet>
+    <servlet-name>spring</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>spring</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+</web-app>
+
+
+springservelt.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="  
+        http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://www.springframework.org/schema/context  
+        http://www.springframework.org/schema/context/spring-context.xsd  
+        http://www.springframework.org/schema/mvc  
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- Provide support for component scanning -->
+	<context:component-scan base-package="com.lab09" />
+
+	<!--Provide support for conversion, formatting and validation -->
+	<mvc:annotation-driven />
+	<!-- Define Spring MVC view resolver -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value=""></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+</beans>
